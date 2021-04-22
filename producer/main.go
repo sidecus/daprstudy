@@ -51,6 +51,7 @@ func main() {
 		}
 
 		// Publish to topic
+		log.Printf("Publishing event. Payload: %v", buf)
 		if err = c.PublishEvent(ctx, pubsubName, topicName, buf); err != nil {
 			log.Fatalf("Failed to publish event %v", counter)
 		}
