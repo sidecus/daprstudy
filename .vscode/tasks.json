@@ -1,0 +1,30 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "group": "build",
+            "command": "go build .",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$go"
+            ]
+        },
+        {
+            "appId": "echoapp",
+            "appPort": 27015,
+            "label": "daprd-debug",
+            "type": "daprd"
+        },
+        {
+            "appId": "echoapp",
+            "label": "daprd-down",
+            "type": "daprd-down"
+        }
+    ]
+}

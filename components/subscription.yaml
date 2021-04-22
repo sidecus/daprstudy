@@ -1,0 +1,10 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: counter-subscription
+spec:
+  topic: counter
+  route: /processcounter
+  pubsubname: pubsub
+scopes:
+- consumer
