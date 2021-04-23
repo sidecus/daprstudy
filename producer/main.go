@@ -13,7 +13,6 @@ const keyName = "CounterKey"
 
 var (
 	storeName  = "statestore"
-	counter    = uint64(0)
 	pubsubName = "pubsub"
 	topicName  = "counter"
 )
@@ -23,39 +22,41 @@ func main() {
 	if err != nil {
 		log.Fatal("Client creation failed")
 	}
+	defer c.Close()
 
 	ctx := context.Background()
 
 	for {
+		time.Sleep(5 * time.Second)
+
 		// Read from state
 		item, err := c.GetState(ctx, storeName, keyName)
 		if err != nil {
-			log.Panic("Reading state error")
+			log.Print("Reading state error", err)
+			continue
 		}
-		if len(item.Value) == 0 {
-			counter = 0
-		} else {
+		var counter = uint64(0)
+		if len(item.Value) > 0 {
 			counter = binary.BigEndian.Uint64(item.Value)
 		}
-		log.Printf("Counter: %v => %v", counter, counter+1)
 
 		// Process - Increase counter
-		counter++
-		buf := make([]byte, 8)
-		binary.BigEndian.PutUint64(buf, counter)
+		newCounter := counter + 1
+		log.Printf("Counter: %v => %v", counter, newCounter)
 
 		// Save back to state
-		err = c.SaveState(ctx, storeName, keyName, buf)
-		if err != nil {
-			log.Fatal("Failed to set state", err)
+		buf := make([]byte, 8)
+		binary.BigEndian.PutUint64(buf, newCounter)
+		if err := c.SaveState(ctx, storeName, keyName, buf); err != nil {
+			log.Print("Failed to set state", err)
+			continue
 		}
 
 		// Publish to topic
-		log.Printf("Publishing event. Payload: %v", buf)
-		if err = c.PublishEvent(ctx, pubsubName, topicName, buf); err != nil {
-			log.Fatalf("Failed to publish event %v", counter)
+		log.Printf("Publishing event.")
+		if err := c.PublishEventfromCustomContent(ctx, pubsubName, topicName, newCounter); err != nil {
+			log.Printf("Failed to publish event %v", counter)
+			continue
 		}
-
-		time.Sleep(5 * time.Second)
 	}
 }

@@ -4,27 +4,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "type": "shell",
-            "group": "build",
-            "command": "go build .",
-            "options": {
-                "cwd": "${workspaceRoot}"
-            },
-            "problemMatcher": [
-                "$go"
-            ]
-        },
-        {
-            "appId": "echoapp",
+            "appId": "consumer",
+            "appProtocol": "http",
             "appPort": 27015,
+            "componentsPath": "./components",
             "label": "daprd-debug",
             "type": "daprd"
         },
         {
-            "appId": "echoapp",
+            "appId": "consumer",
             "label": "daprd-down",
-            "type": "daprd-down"
+            "type": "daprd-down",
         }
     ]
 }

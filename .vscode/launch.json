@@ -5,11 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Package with Dapr",
+            "name": "Launch consumer with Dapr",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceRoot}/consumer/main.go",
+            // "args": ["-consumerport", "27016"],
             "preLaunchTask": "daprd-debug",
             "postDebugTask": "daprd-down"
         }
